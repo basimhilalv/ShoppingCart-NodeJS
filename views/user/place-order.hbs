@@ -1,0 +1,115 @@
+<section>
+    <div class="container mt-5 pl-5">
+        <h2 class="text-left mb-3">Complete Your Order</h2>
+        <form action="" method="POST" id="checkout-form">
+            <div class="row">
+                <div class="col-md-6 form-control">
+                    <div class="form-group">
+                        <label for="">Shipping Address</label>
+                        <input class="form-control mt-1" type="text" name="address" placeholder="House/Flat Number">
+                        <input class="form-control mt-1" type="text" name="address" placeholder="Street">
+                        <input class="form-control mt-1" type="text" name="address" placeholder="District">
+                        <input class="form-control mt-1" type="text" name="address" placeholder="Pin Code">
+                        <input type="text" name="userId" id="" value="{{user._id}}" hidden>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Contact Number</label>
+                        <input class="form-control" type="text" name="phone" placeholder="Mobile">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        <input class="form-control" type="text" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="col-md-6">
+
+                    <div class="container form-control" style="position: absolute;">
+                        <h4>Total Order Amount : Rs {{totalPrice}}/-</h4>
+                        <div class="form-group">
+                            <p>Select your Payment Option :</p>
+                            <input type="radio" name="pay" value="cc">
+                            <label for="">Credit Card</label><br>
+                            <input type="radio" name="pay" value="dc">
+                            <label for="">Debit Card</label><br>
+                            <input type="radio" name="pay" value="upi">
+                            <label for="">UPI</label><br>
+                            <input type="radio" name="pay" value="cod">
+                            <label for="">Cash On Delivery</label><br>
+                        </div>
+                        <button type="submit" class="btn btn-success float-right" style="width: 100%;">Confirm
+                            Order</button>
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    </form>
+    </div>
+    </div>
+
+</section>
+
+<script>
+    $("#checkout-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place-order',
+            method: 'POST',
+            data: $('#checkout-form').serialize(),
+            success: (response) => {
+                if (response.codSuccess === true) {
+                    console.log("if function worked in ajax")
+                    window.location.href = '/order-done';
+                } else {
+                    razorPayment(response)
+                }
+            }
+        })
+    })
+
+    function razorPayment(order) {
+        var options = {
+            "key": "rzp_test_aQMVAx844Oe1sO", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "basi.play",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+
+                verifyPayment(response,order)
+            },
+            "prefill": {
+                "name": "Basim",
+                "email": "basimhilal25v@gmail.com",
+                "contact": "9000090000"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+    function verifyPayment(payment,order){
+        $.ajax({
+            url:'/verify-payment',
+            data:{
+                payment,
+                order
+            },
+            method:'post',
+            success:(response)=>{
+                if(response.status === true){
+                    window.location.href = '/order-done';
+                }else{
+                    alert('Payment Failed');
+                }
+            }
+        })
+    }
+</script>

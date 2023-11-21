@@ -1,0 +1,23 @@
+
+<section>
+    <div class="container mt-5">
+        <div class="row">
+            {{#each games}}
+
+            <div class="col-lg-3 p-2 col-md-4 col-sm-6 col-12">
+                <div class="card p-2" style="width: 100%; height:30rem">
+                    <img class="card-img-top img-fluid" style="height: 18rem;" src="/images/{{this._id}}.jpg"
+                        alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.name}}</h5>
+                        <p class="card-text">{{this.category}} game created by {{this.created}}</p>
+                        <a href="#" class="btn btn-primary" >Download</a>
+                        {{!-- <a href="/add-to-cart?id={{this._id}}" class="btn btn-secondary">Add To Cart</a> --}}
+                        <button class="btn btn-success" onclick="addToCart('{{this._id}}')">Cart+</button>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,134 @@
+<section>
+    <div class="container">
+        <table class="table mt-5">
+            <thead>
+                <th>Order Date</th>
+                <th>Address</th>
+                <th>Order Total</th>
+                <th>Status</th>
+                <th>Products</th>
+            </thead>
+            {{#each orders}}
+            <tbody>
+                
+            <tr>
+                <td>{{this.orderDate}}</td>
+                <td>{{this.deliveryDetails.address}}</td>
+                <td>{{this.orderTotal}}</td>
+                <td>{{this.status}}</td>
+                <td>
+                    {{!-- <a href="/order-products" id="showbtn" class="btn btn-secondary">View Products</a> --}}
+                    <button class="btn btn-dark showbtn">View</button>
+                </td>
+            </tr>
+           
+            <tr class="showCol" style="display: none;">
+               
+                <td colspan="5">
+                    
+                     {{#each this.collections}}
+                     <div class="col-md-6"></div>
+                    <div class="d-flex justify-content-center">
+                        <div class="card voutchers mb-2">
+
+                    <div class="voutcher-divider">
+                        <div class="voutcher-pic text-center border-right">
+                            <img src="/images/{{this._id._id}}.jpg" style="height: 150px; width:140px;"  alt="">
+                        </div>
+                        <div class="voutcher-left text-center mt-3"><span class="voutcher-name">basi.play</span>
+                            <h5 class="voutcher-code">{{this._id.name}}</h5>
+                            
+                            <p class="voutcher-name">{{this._id.category}} game created by {{this._id.created}}</p>
+                        </div>
+                        <div class="voutcher-right text-center border-left">
+                            <h5 class="discount-percent">MRP</h5> <span class="off">{{this._id.price}}</span>
+                            <h5 class="discount-percent">Purchased</h5> <span class="off">{{this.quantity}}</span>
+                            <h5 class="discount-percent">Total Cost</h5> <span class="off">{{#price this._id.price this.quantity}} {{/price}}</span>
+                            
+                        </div>
+                        
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    {{/each}}
+                    
+                </td>
+            </tr>
+            
+            </tbody>
+            {{/each}}
+        </table>
+    </div>
+</section>
+
+<script>
+        // JavaScript code to toggle the visibility of the div
+        const showColbtn = document.querySelectorAll('.showbtn');
+        const showCol = document.querySelectorAll('.showCol');
+        showColbtn.forEach((showColbtns,index)=>{
+            showColbtns.addEventListener('click', function () {
+            if (showCol[index].style.display === 'none') {
+                showCol[index].style.display = 'table-row';
+                showColbtns.textContent = "Hide";
+            } else {
+                showCol[index].style.display = 'none';
+                showColbtns.textContent = "View";
+            }
+        });
+        });
+        
+    </script>
+<style>
+.voutchers {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    width: 60%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    overflow: hidden;
+}
+
+.voutcher-divider {
+    display: flex
+}
+
+.voutcher-left {
+    width: 60%
+}
+
+.voutcher-pic{
+    width:20%
+}
+
+.voutcher-name {
+    color: rgb(49, 47, 47);
+    font-size: 13px;
+    font-weight: 500
+}
+
+.voutcher-code {
+    color: rgb(18, 170, 68);
+    font-size: 22px;
+    font-weight: bold
+}
+
+.voutcher-right {
+    width: 20%;
+    background-color: rgb(47, 45, 45);
+    color: #fff
+}
+
+.discount-percent {
+    font-size: 12px;
+    font-weight: bold;
+    position: relative;
+    top: 5px
+}
+
+.off {
+    font-size: 14px;
+    position: relative;
+    bottom: 5px
+}
+    </style>
